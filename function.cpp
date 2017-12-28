@@ -58,14 +58,6 @@ double Multiplication::doBackward(int currentVar) {
         }
     }
 
-    /*
-    double result;
-    for(int i=0;i<this->inputs.size();i++){
-        if(this->inputs[i]->id != currentVar)
-            result = this->inputs[i]->value;
-    }
-    return result;
-     */
 }
 
 Addition::Addition(int _id, string _name){

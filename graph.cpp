@@ -13,8 +13,6 @@
 #include <sstream>
 #include <algorithm>
 
-#define PI 3.14159265
-
 using namespace std;
 
 template <class Container>
@@ -23,11 +21,6 @@ void split1(const string& str, Container& cont)
     istringstream iss(str);
     copy(istream_iterator<string>(iss), istream_iterator<string>(), back_inserter(cont));
 }
-
-struct CompareBySecond {
-    constexpr bool operator()(pair<int, int> const & a, pair<int, int> const & b) const noexcept
-    { return a.second > b.second; }
-};
 
 // helper function that checks whether the given string is number or not.
 bool isNumber(const string& s)
@@ -63,7 +56,6 @@ int Graph::getVariable(string inp){
             res = id[inp];
         }
     }
-    // printf("%s -> %d\n",inp.c_str(), res);
     return res;
 }
 
@@ -73,7 +65,6 @@ int Graph::getFunction(string fnc){
     name[idCount] = fnc;
     type[idCount] = FUNCTION;
     Function *f;
-    // cout << "new Function: " << fnc << endl;
     if(fnc.compare("mult")==0)
         f = new Multiplication(idCount, fnc);
     else if(fnc.compare("add")==0)
@@ -194,7 +185,7 @@ void Graph::readGraph(char argv[]){
 }
 
 vector<int> Graph::topologicalSort() {
-    //priority_queue< pair<int,int> , vector<pair<int,int>>,CompareBySecond> nodes; //stores id and corresponding indegrees
+
     vector< pair<int,int>> nodes;
     vector<int> result;
     //calculate the indegrees of variable nodes
@@ -249,10 +240,14 @@ vector<int> Graph::topologicalSort() {
 
 }
 
-//void Graph::initTopologicalOrder(queue<Node *> &q, int *incSizes){
-//}
 
 bool Graph::isCyclic(){
+    bool cycledetected = 1;
+    for(auto it : vars){
+        if(it.second->from == nullptr)
+            cycledetected = 0;
+    }
+    return cycledetected;
 }
 
 double Graph::forwardPass(vector<string> inputNames,vector<string> inputValues){
@@ -260,7 +255,6 @@ double Graph::forwardPass(vector<string> inputNames,vector<string> inputValues){
 
     int varCount = numCount; //counts the number of variables to which a number is assigned
 
-    //IMPROVE WITH INPUTNODES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //set the values of inputs
     for(int i=0;i<inputNames.size();i++){
         unordered_map<string,int>::iterator it;
@@ -272,11 +266,10 @@ double Graph::forwardPass(vector<string> inputNames,vector<string> inputValues){
             vars[it->second]->value = stod(inputValues[i]);
             vars[it->second]->initialized = 1;
             varCount++;
-            //cout << it->first << "::" << it->second << std::endl;
         }
         else
         {
-            std::cout << "Element Not Found" << std::endl;
+            cout << "Element Not Found" << endl;
         }
     }
 
@@ -336,8 +329,6 @@ void Graph::backwardPass(){
             }
         }
     }
-
-
 
 };
 
